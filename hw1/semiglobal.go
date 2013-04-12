@@ -42,11 +42,11 @@ func computeMatrix(a string, b string) [][]int {
     for i := 1; i < len(b) + 1; i++ {
         for j := 1; j < len(a) + 1; j++ {
             match := F[i-1][j-1] + score(a[j-1], b[i-1])
-            delete := F[i-1][j]
-            insert := F[i][j-1]
-            if i != len(b) && j != len(a) {
-                delete += GAP_PENALTY 
-                insert += GAP_PENALTY
+            delete := F[i-1][j] + GAP_PENALTY
+            insert := F[i][j-1] + GAP_PENALTY
+            if (i == len(b) || j == len(a)) {
+                delete -= GAP_PENALTY 
+                insert -= GAP_PENALTY
             }
             F[i][j] = getMax(match, delete, insert)
         }
@@ -67,7 +67,7 @@ func getTraceback(m [][]int, a string, b string, i int, j int, alignmentA string
         return
     }
     var gp int
-    if i == len(b) || j == len(a) || i == 0 || j == 0 {
+    if (i == 0 || j == 0 || i == len(b) || j == len(a)) {
         gp = 0
     } else {
         gp = GAP_PENALTY
