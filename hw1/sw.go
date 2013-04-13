@@ -89,7 +89,7 @@ func getBestAlignments(m [][]int, a string, b string) {
     }
     for i := 0; i < len(m); i++ {
         for j := 0; j < len(m[i]); j++ {
-            if m[i][j] == max {
+            if m[i][j] == max || m[i][j] == max - 1 {
                 fmt.Println(m[i][j], "Trace starting at", i, j)
                 getTraceback(m, a, b, len(b), len(a), "", "")
             }
