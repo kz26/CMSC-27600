@@ -8,6 +8,7 @@ import "strings"
 
 import "hw2/nw"
 import "hw2/semiglobal"
+import "hw2/sw"
 
 type ComputeMatrixFunc func(a string, b string, scoreMatrix map[string]int, gp int) [][]int
 type TracebackFunc func(m [][]int, seqA string, seqB string, scoreMatrix map[string]int, gp int) (int, string, string)
@@ -60,6 +61,12 @@ func main() {
     } else if alignmentMode == 1 {
         cmf = semiglobal.ComputeMatrix
         tf = semiglobal.GetTraceback
+    } else if alignmentMode == 2 {
+        cmf = sw.ComputeMatrix
+        tf = sw.GetTraceback
+    } else {
+        fmt.Println("[Error] Invalid alignment mode.")
+        os.Exit(1)
     }
 
     F := cmf(seq1, seq2, scoreMatrix, gapPenalty)
