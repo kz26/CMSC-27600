@@ -1,6 +1,8 @@
 package utils
 
-func getMax(x ...int) int {
+import "fmt"
+
+func GetMax(x ...int) int {
     max := x[0]
     for i := 0; i < len(x); i++ {
         if x[i] > max {
@@ -10,7 +12,7 @@ func getMax(x ...int) int {
     return max
 }
 
-func getMaxOfList(x []int) int {
+func GetMaxOfList(x []int) int {
     max := x[0]
     for i := 0; i < len(x); i++ {
         if x[i] > max {
@@ -20,7 +22,12 @@ func getMaxOfList(x []int) int {
     return max
 }
 
-func score(a byte, b byte, scoreMatrix map[string]int) int {
+func Score(a byte, b byte, scoreMatrix map[string]int) int {
     return scoreMatrix[string(a) + string(b)]
 }
 
+func PrintMatrix(m [][]int) {
+    for i := 0; i < len(m); i++ {
+        fmt.Println(m[i])
+    }
+}

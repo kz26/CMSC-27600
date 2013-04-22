@@ -6,6 +6,8 @@ import "os"
 import "strconv"
 import "strings"
 
+import "hw2/nw"
+
 func main() {
     file, _ := os.Open(os.Args[1])
     reader := bufio.NewReader(file)
@@ -20,7 +22,8 @@ func main() {
     alignmentMode, _ := strconv.ParseInt(strings.TrimSpace(line), 0, 0)
 
     line, _ = reader.ReadString('\n')
-    gapPenalty, _ := strconv.ParseInt(strings.TrimSpace(line), 0, 0)
+    gp, _ := strconv.ParseInt(strings.TrimSpace(line), 0, 0)
+    gapPenalty := int(gp)
 
     line, _ = reader.ReadString('\n')
     alphabet := strings.TrimSpace(line)
@@ -42,5 +45,13 @@ func main() {
         row++
     }
 
-    fmt.Println(seq1, seq2, alignmentMode, gapPenalty, alphabet, scoreMatrix)
+    //fmt.Println(seq1, seq2, alignmentMode, gapPenalty, alphabet, scoreMatrix)
+
+    if alignmentMode == 0 {
+        F := nw.ComputeMatrix(seq1, seq2, scoreMatrix, gapPenalty)
+        bestScore, alignmentA, alignmentB := nw.GetTraceback(F, seq1, seq2, scoreMatrix, gapPenalty)
+        fmt.Println(bestScore)
+        fmt.Println(alignmentA)
+        fmt.Println(alignmentB)
+    }
 }
