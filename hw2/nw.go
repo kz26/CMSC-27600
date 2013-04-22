@@ -1,30 +1,11 @@
-package main
+package nw
 
 import "fmt"
 import "os"
+import "./utils"
 
-const MATCH = 2
-const MISMATCH = -1
-const GAP_PENALTY = -2
-
-func getMax(x ...int) int {
-    max := x[0]
-    for i := 0; i < len(x); i++ {
-        if x[i] > max {
-            max = x[i]
-        }
-    }
-    return max
-}
-
-func score(a byte, b byte) int {
-    if a == b {
-        return MATCH
-    }
-    return MISMATCH
-}
  
-func computeMatrix(a string, b string) [][]int {
+func computeMatrix(a string, b string, scoreMatrix map[string]int, gp int) [][]int {
     F := make([][]int, len(b) + 1)
 
     for i := 0; i < len(b) + 1; i++ {
@@ -32,19 +13,19 @@ func computeMatrix(a string, b string) [][]int {
     }
 
     for j := 0; j < len(a) + 1; j++ {
-        F[0][j] = 0
+        F[0][j] = j * gp
     }
 
     for i := 0; i < len(b) + 1; i++ {
-        F[i][0] = 0
+        F[i][0] = i * gp
     }
 
     for i := 1; i < len(b) + 1; i++ {
         for j := 1; j < len(a) + 1; j++ {
             match := F[i-1][j-1] + score(a[j-1], b[i-1])
-            delete := F[i-1][j] + GAP_PENALTY
-            insert := F[i][j-1] + GAP_PENALTY
-            F[i][j] = getMax(match, delete, insert, 0)
+            delete := F[i-1][j] + gp
+            insert := F[i][j-1] + gp
+            F[i][j] = getMax(match, delete, insert)
         }
     }
 
@@ -58,7 +39,7 @@ func printMatrix(m [][]int) {
 }
 
 func getTraceback(m [][]int, a string, b string, i int, j int, alignmentA string, alignmentB string) {
-    if (i == 0 && j == 0) || m[i][j] == 0 {
+    if i == 0 && j == 0 {
         fmt.Println(alignmentA, alignmentB)
         return
     }
@@ -78,28 +59,8 @@ func getTraceback(m [][]int, a string, b string, i int, j int, alignmentA string
     }
 }
 
-func getBestAlignments(m [][]int, a string, b string) {
-    max := m[0][0]
-    for i := 0; i < len(m); i++ {
-        for j := 0; j < len(m[i]); j++ {
-            if m[i][j] > max {
-                max = m[i][j] 
-            }
-        }
-    }
-    for i := 0; i < len(m); i++ {
-        for j := 0; j < len(m[i]); j++ {
-            if m[i][j] == max || m[i][j] == max - 1 {
-                fmt.Println(m[i][j], "Trace starting at", i, j)
-                getTraceback(m, a, b, i, j, "", "")
-            }
-        }
-    }
-}
-
-
 func main() {
    F := computeMatrix(os.Args[1], os.Args[2])
    printMatrix(F)
-   getBestAlignments(F, os.Args[1], os.Args[2])
+   getTraceback(F, os.Args[1], os.Args[2], len(os.Args[2]), len(os.Args[1]), "", "")
 }
