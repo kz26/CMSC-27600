@@ -41,18 +41,12 @@ func getStartingPoint(m [][]int) (int, int) {
 
     row := len(m) - 1
     col := len(m[0]) - 1
-    for !(row == 0 && col == 0) {
+    for col >= 0 {
         for i := row; i >= 0; i-- {
             if m[i][col] == max {
                 return i, col
             }
         }
-        for j := col; j >= 0; j-- {
-            if m[row][j] == max {
-                return row, j
-            }
-        }
-        row--
         col--
     }
     return -1, -1
