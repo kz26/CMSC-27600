@@ -2,6 +2,8 @@ package utils
 
 import "fmt"
 
+// Utility functions
+
 func GetMax(x ...int) int {
     max := x[0]
     for i := 0; i < len(x); i++ {
@@ -22,6 +24,7 @@ func GetMaxOfList(x []int) int {
     return max
 }
 
+// Scoring function
 func Score(a byte, b byte, scoreMatrix map[string]int) int {
     return scoreMatrix[string(a) + string(b)]
 }

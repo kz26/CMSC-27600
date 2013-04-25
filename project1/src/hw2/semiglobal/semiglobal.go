@@ -2,13 +2,15 @@ package semiglobal
 
 import "hw2/utils"
 
+// Matrix computation function for semiglobal
 func ComputeMatrix(a string, b string, scoreMatrix map[string]int, gp int) [][]int {
     F := make([][]int, len(b) + 1)
 
     for i := 0; i < len(b) + 1; i++ {
-        F[i] = make([]int, len(a) + 1) 
+        F[i] = make([]int, len(a) + 1)
     }
 
+    // initialize first row and column to 0
     for j := 0; j < len(a) + 1; j++ {
         F[0][j] = 0
     }
@@ -22,6 +24,7 @@ func ComputeMatrix(a string, b string, scoreMatrix map[string]int, gp int) [][]i
             match := F[i-1][j-1] + utils.Score(a[j-1], b[i-1], scoreMatrix)
             del := F[i-1][j] + gp
             insert := F[i][j-1] + gp
+            // skip the gap penalty if it's the last row or column
             if (i == len(b) || j == len(a)) {
                 del -= gp
                 insert -= gp
@@ -33,6 +36,7 @@ func ComputeMatrix(a string, b string, scoreMatrix map[string]int, gp int) [][]i
     return F
 }
 
+// Traceback for semiglobal
 func GetTraceback(m [][]int, seqA string, seqB string, scoreMatrix map[string]int, gapPenalty int) (int, string, string) {
     alignmentA := ""
     alignmentB := ""
@@ -42,10 +46,11 @@ func GetTraceback(m [][]int, seqA string, seqB string, scoreMatrix map[string]in
     var gp int
 
     for (i > 0 || j > 0) {
+        // Set the gap penalty
         if i == 0 || j == 0 || i == len(seqB) || j == len(seqA) {
-            gp = 0
+            gp = 0 // 0 for first or last row/column
         } else {
-            gp = gapPenalty
+            gp = gapPenalty // otherwise use regular gap penalty
         }
         x := utils.GetMax(0, i - 1)
         y := utils.GetMax(0, j - 1)

@@ -14,6 +14,13 @@ type ComputeMatrixFunc func(a string, b string, scoreMatrix map[string]int, gp i
 type TracebackFunc func(m [][]int, seqA string, seqB string, scoreMatrix map[string]int, gp int) (int, string, string)
 
 func main() {
+
+    if len(os.Args) != 2 {
+        fmt.Println("Usage:", os.Args[0], "<input file>")
+        os.Exit(1)
+    }
+
+    // Parse the input file
     file, _ := os.Open(os.Args[1])
     reader := bufio.NewReader(file)
 
@@ -33,6 +40,7 @@ func main() {
     line, _ = reader.ReadString('\n')
     alphabet := strings.TrimSpace(line)
 
+    // Parse the score matrix as a map
     scoreMatrix := make(map[string]int)
     row := 0
     for {
@@ -52,6 +60,8 @@ func main() {
 
     //fmt.Println(seq1, seq2, alignmentMode, gapPenalty, alphabet, scoreMatrix)
 
+    // Choose the appropriate matrix computation and traceback function
+
     var cmf ComputeMatrixFunc
     var tf TracebackFunc
 
@@ -69,6 +79,7 @@ func main() {
         os.Exit(1)
     }
 
+    // Do it
     F := cmf(seq1, seq2, scoreMatrix, gapPenalty)
     bestScore, alignmentA, alignmentB := tf(F, seq1, seq2, scoreMatrix, gapPenalty)
     fmt.Println(bestScore)

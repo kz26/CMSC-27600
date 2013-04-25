@@ -2,7 +2,7 @@ package nw
 
 import "hw2/utils"
 
-
+// Needleman-Wunsch matrix compute function
 func ComputeMatrix(a string, b string, scoreMatrix map[string]int, gp int) [][]int {
     F := make([][]int, len(b) + 1)
 
@@ -29,6 +29,7 @@ func ComputeMatrix(a string, b string, scoreMatrix map[string]int, gp int) [][]i
     return F
 }
 
+// Get the traceback
 func GetTraceback(m [][]int, seqA string, seqB string, scoreMatrix map[string]int, gp int) (int, string, string) {
     alignmentA := ""
     alignmentB := ""
@@ -36,23 +37,28 @@ func GetTraceback(m [][]int, seqA string, seqB string, scoreMatrix map[string]in
     j := len(seqA)
 
     for (i > 0 || j > 0) {
+        // Compute and store the string indexes
         x := utils.GetMax(0, i - 1)
         y := utils.GetMax(0, j - 1)
+        // diagonal
         if i > 0 && j > 0 && m[i][j] == (m[i-1][j-1] + utils.Score(seqA[y], seqB[x], scoreMatrix)) {
             alignmentA = string(seqA[y]) + alignmentA
             alignmentB = string(seqB[x]) + alignmentB
             i--
             j--
+        // left
         } else if j > 0 && m[i][j] == (m[i][j-1] + gp) {
             alignmentA = string(seqA[y]) + alignmentA
             alignmentB = "-" + alignmentB
             j--
+        // up
         } else if i > 0 && m[i][j] == (m[i-1][j] + gp) {
             alignmentA = "-" + alignmentA
             alignmentB = string(seqB[x]) + alignmentB
             i--
         }
     }
+    // return score and two alignments
     return m[len(seqB)][len(seqA)], alignmentA, alignmentB
 }
 
