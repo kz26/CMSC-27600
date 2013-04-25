@@ -63,9 +63,13 @@ func GetTraceback(m [][]int, seqA string, seqB string, scoreMatrix map[string]in
     i, j := getStartingPoint(m)
     I, J := i, j
 
-    for (i > 0 || j > 0) && m[i][j] != 0 { // stop if the score is 0
+    for (i > 0 || j > 0) {
         x := utils.GetMax(0, i - 1)
         y := utils.GetMax(0, j - 1)
+        // stop if there's a 0 and no pointer that produced it...which only happens in the first row/column
+        if m[i][j] == 0 && (i == 0 || j == 0) {
+            break
+        }
         if i > 0 && j > 0 && m[i][j] == (m[i-1][j-1] + utils.Score(seqA[y], seqB[x], scoreMatrix)) {
             alignmentA = string(seqA[y]) + alignmentA
             alignmentB = string(seqB[x]) + alignmentB
