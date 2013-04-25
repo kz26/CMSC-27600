@@ -24,3 +24,7 @@ This will produce an executable "main" file.
 The program takes exactly one argument, the path to an input file.
 
     ./main data/test1.txt
+
+To run the test suite, which diffs against all six posted test files, do:
+
+    ./test.sh
