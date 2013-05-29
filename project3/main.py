@@ -88,8 +88,14 @@ class Gibbs(object):
 			lls = self.calc_ll_all(Si, q)
 			self.new_ai_prob(Si, lls)
 			self.update_best(q)
+		return (self.best_q, self.get_best_motif())
 		print self.best_q
 		print self.get_best_motif()
 
+if len(sys.argv) != 3:
+	sys.stderr.write("Usage: %s <input file> <output file>\n" % (sys.argv[0]))
+	sys.exit(1)
 G = Gibbs(sys.argv[1])
-G.run()
+q, motif = G.run()
+np.savetxt(sys.argv[2], q, fmt="%f")
+print motif
